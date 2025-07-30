@@ -118,3 +118,26 @@ body {
   padding-left: 0;
   padding-right: 0;
 }
+
+.btn-search {
+  background-color: #fe424d !important;
+  color: #ffff !important;
+  border-radius: 25px !important;
+  padding: 0 1rem 0 1rem !important;
+}
+
+.btn-search:hover {
+  background-color: #fe424d !important;
+  color: #ffff !important;
+}
+
+.btn-search i {
+  display: inline;
+  margin-right: 0.5rem;
+}
+
+.search-inp {
+  border-radius: 25px !important;
+  padding: 0.5rem 3rem 0.5rem 3rem !important;
+  font-size: 1rem !important;
+}

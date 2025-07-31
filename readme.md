@@ -4,12 +4,6 @@
 
 ---
 
-## 🌐 Live Demo
-
-(Upload the video to Google Cloud and paste the link here)
-
----
-
 ## 📌 Features
 
 - 🏘️ Browse all property listings

@@ -25,7 +25,7 @@
   <div class="btns">
     <a
       href="/listings/<%= listing._id %>/edit "
-      class="btn  btn-dark offset-3 edit-btn"
+      class="btn btn-dark offset-3 edit-btn"
       >Edit</a
     >
     <form method="POST" action="/listings/<%=listing._id%>?_method=DELETE">
@@ -135,13 +135,21 @@
               <%= review.comment %>
             </p>
             <% if(currUser && currUser._id.equals(review.author._id)) { %>
-            <form
-              class="mb-2 mt-2"
-              action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
-              method="POST"
-            >
-              <button class="btn btn-sm btn-dark">Delete</button>
-            </form>
+            <div class="review-btns">
+              <a
+                href="/listings/<%= listing._id %>/reviews/<%= review._id %>/edit"
+                class="btn btn-sm btn-danger review-edit-btn"
+                >Edit</a
+              >
+
+              <form
+                class="mb-2 mt-2"
+                action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE"
+                method="POST"
+              >
+                <button class="btn btn-sm btn-dark">Delete</button>
+              </form>
+            </div>
             <% } %>
           </div>
         </div>

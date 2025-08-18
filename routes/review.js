@@ -20,6 +20,24 @@ router.post(
   wrapAsync(reviewController.createReview)
 );
 
+// Update Route
+
+router.get(
+  "/:reviewId/edit",
+  isLoggedIn,
+  isReviewAuthor,
+  validateReview,
+  wrapAsync(reviewController.renderEditForm)
+);
+
+router.put(
+  "/:reviewId",
+  isLoggedIn,
+  isReviewAuthor,
+  validateReview,
+  wrapAsync(reviewController.updateReview)
+);
+
 // Delete Review Route
 
 router.delete(

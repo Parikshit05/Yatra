@@ -141,3 +141,11 @@ body {
   padding: 0.5rem 3rem 0.5rem 3rem !important;
   font-size: 1rem !important;
 }
+
+
+.review-btns{
+  display: flex;
+  justify-content:space-between;
+  align-items: center;
+  flex-wrap: wrap;
+}

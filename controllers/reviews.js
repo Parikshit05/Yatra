@@ -19,3 +19,33 @@ module.exports.destroyReview = async (req, res) => {
   req.flash("success", "Review Deleted!");
   res.redirect(`/listings/${id}`);
 };
+
+module.exports.renderEditForm = async (req, res) => {
+  let { id, reviewId } = req.params;
+  const listing = await Listing.findById(id);
+  const review = await Review.findById(reviewId);
+
+  if (!review) {
+    req.flash("error", "Review Not Found!");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  res.render("./listings/editReview.ejs", { listing, review });
+};
+
+
+module.exports.updateReview = async (req, res) => {
+  let { id, reviewId } = req.params;
+  const listing = await Listing.findById(id);
+  const review = await Review.findById(reviewId);
+
+  if (!review) {
+    req.flash("error", "Review Not Found!");
+    return res.redirect(`/listings/${id}`);
+  }
+
+  Object.assign(review, req.body.review);
+  await review.save();
+  req.flash("success", "Review Updated!");
+  res.redirect(`/listings/${id}`);
+};

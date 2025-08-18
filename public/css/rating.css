@@ -198,3 +198,7 @@
   -webkit-transition: background-position 0.7s;
   transition: background-position 0.7s;
 }
+
+.card-body {
+  padding: 1rem 0 1rem 1rem !important;
+}

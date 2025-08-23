@@ -11,7 +11,7 @@
       alt="listing-image"
     />
     <div class="card-body">
-      <p class="card-text">Owned by:- <i><%= listing.owner.username %></i></p>
+      <p class="card-text" >Owned by:- <i><%= listing.owner.username %></i></p>
       <p class="card-text"><%= listing.description %></p>
       <p class="card-text">
         &#8377; <%= listing.price.toLocaleString("en-IN") %>
@@ -118,7 +118,7 @@
       <div class="col-md-4 col-sm-6 mb-3">
         <div class="card shadow-sm h-100">
           <div class="card-body d-flex flex-column">
-            <h5 class="card-subtitle mb-2 text-black">
+            <h5 class="card-subtitle mb-2 review-author">
               @<%= review.author.username %>
             </h5>
 

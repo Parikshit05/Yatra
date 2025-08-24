@@ -264,6 +264,11 @@ body.dark-mode ::placeholder
   color: white !important;
 }
 
+body.dark-mode #comment{
+  background-color: #121618 !important;
+    color: #fff !important;
+}
+
 /* Light mode (default) */
 #mainFooter, f-info {
   background-color: #f8f9fa;
@@ -308,7 +313,7 @@ body.dark-mode .f-info a {
 
 /* Default (light mode) */
 .custom-mobile-menu {
-  background-color: #ffffff !important;
+  background-color: #f8f9fb !important;
   color: #000000 !important;
 }
 
@@ -380,4 +385,9 @@ body.dark-mode .navbar-toggler{
 /* Dark mode */
 [data-bs-theme="dark"] .review-author {
   color: white; /* or #ddd for softer */
+}
+
+.dark-option{
+  display: flex;
+  
 }

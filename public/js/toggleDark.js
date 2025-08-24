@@ -1,5 +1,7 @@
 const toggle = document.getElementById('darkModeToggle');
 const footer = document.getElementById('mainFooter');
+const toggleBtn = document.getElementById("darkModeToggleBtn");
+  const toggleIcon = document.getElementById("darkModeIcon");
 
 function applyTheme(theme) {
   document.body.classList.toggle('dark-mode', theme === 'dark');
@@ -25,9 +27,15 @@ toggle.addEventListener('change', () => {
   if (toggle.checked) {
     document.body.classList.add('dark-mode');
     localStorage.setItem('darkMode', 'enabled');
+    toggleIcon.classList.remove("fa-moon");
+    toggleIcon.classList.add("fa-sun");
+    toggleIcon.style.color = "#facc15";
   } else {
     document.body.classList.remove('dark-mode');
     localStorage.setItem('darkMode', 'disabled');
+    toggleIcon.classList.remove("fa-sun");
+    toggleIcon.classList.add("fa-moon");
+    toggleIcon.style.color = "#121212";
   }
 });
 

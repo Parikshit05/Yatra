@@ -56,41 +56,56 @@ module.exports.createListing = async (req, res, next) => {
     newListing.image = { url, filename };
   }
 
-  const fullLocation = `${newListing.location}, ${newListing.country}`;
+  // const fullLocation = `${newListing.location}, ${newListing.country}`;
+  // const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`;
+  let fullLocation = req.body.listing.location.trim();
+if (!fullLocation.toLowerCase().includes(req.body.listing.country.toLowerCase())) {
+  fullLocation += `, ${req.body.listing.country}`;
+}
 
-    // Try to get coordinates from geocoding API
-    try {
-      const geoRes = await fetch(
-        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-          fullLocation
-        )}`
-      );
 
-      let geoData = [];
-      if (geoRes.ok) {
-        const contentType = geoRes.headers.get('content-type');
-        if (contentType && contentType.includes('application/json')) {
-          geoData = await geoRes.json();
-        }
+  // Try to get coordinates from geocoding API
+  try {
+    // const geoRes = await fetch(
+    //   `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+    //     fullLocation
+    //   )}`
+    // );
+    const geoRes = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(
+        fullLocation
+      )}`,
+      {
+        headers: { "User-Agent": "yatra-app/1.0" }, // Nominatim requires this
       }
-      
-      if (geoData && geoData.length > 0) {
-        const latitude = parseFloat(geoData[0]?.lat) || 0;
-        const longitude = parseFloat(geoData[0]?.lon) || 0;
-        
-        if (latitude !== 0 && longitude !== 0) {
-          newListing.coordinates = { latitude, longitude };
-        } else {
-          newListing.coordinates = null;
-        }
+    );
+    const geoData = await geoRes.json();
+
+    // let geoData = [];
+    // if (geoRes.ok) {
+    //   const contentType = geoRes.headers.get("content-type");
+    //   if (contentType && contentType.includes("application/json")) {
+    //     geoData = await geoRes.json();
+    //   }
+    // }
+
+    if (geoData && geoData.length > 0) {
+      const latitude = parseFloat(geoData[0]?.lat) || 0;
+      const longitude = parseFloat(geoData[0]?.lon) || 0;
+
+      if (latitude !== 0 && longitude !== 0) {
+        newListing.coordinates = { latitude, longitude };
       } else {
         newListing.coordinates = null;
       }
-    } catch (geocodingError) {
-      console.error('Geocoding API error:', geocodingError);
-      // Set coordinates to null when geocoding fails
+    } else {
       newListing.coordinates = null;
     }
+  } catch (geocodingError) {
+    console.error("Geocoding API error:", geocodingError);
+    // Set coordinates to null when geocoding fails
+    newListing.coordinates = null;
+  }
 
   await newListing.save();
   req.flash("success", "New Listing Created!");
@@ -114,37 +129,50 @@ module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
   // let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
 
-  let updatedListing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  let updatedListing = await Listing.findByIdAndUpdate(id, {
+    ...req.body.listing,
+  });
 
   if (typeof req.file !== "undefined") {
     let url = req.file.path;
     let filename = req.file.filename;
     updatedListing.image = { url, filename };
-    
   }
 
-const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`;
-  
+  // const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`;
+  // const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`;
+  let fullLocation = req.body.listing.location.trim();
+if (!fullLocation.toLowerCase().includes(req.body.listing.country.toLowerCase())) {
+  fullLocation += `, ${req.body.listing.country}`;
+}
+
+
   // Try to get coordinates from geocoding API
   try {
-    const geoRes = await fetch(
-      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-        fullLocation
-      )}`
-    );
+    // const geoRes = await fetch(
+    //   `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+    //     fullLocation
+    //   )}`
+    // );
 
-    let geoData = [];
-    if (geoRes.ok) {
-      const contentType = geoRes.headers.get('content-type');
-      if (contentType && contentType.includes('application/json')) {
-        geoData = await geoRes.json();
+    // let geoData = [];
+
+    const geoRes = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(
+        fullLocation
+      )}`,
+      {
+        headers: { "User-Agent": "yatra-app/1.0" }, // Nominatim requires this
       }
-    }
-    
+    );
+    const geoData = await geoRes.json();
+
+    // kch line create listing ke comment se le lena
+
     if (geoData && geoData.length > 0) {
       const latitude = parseFloat(geoData[0]?.lat) || 0;
       const longitude = parseFloat(geoData[0]?.lon) || 0;
-      
+
       if (latitude !== 0 && longitude !== 0) {
         updatedListing.coordinates = { latitude, longitude };
       } else {
@@ -154,7 +182,7 @@ const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`
       updatedListing.coordinates = null;
     }
   } catch (geocodingError) {
-    console.error('Geocoding API error:', geocodingError);
+    console.error("Geocoding API error:", geocodingError);
     // Set coordinates to null when geocoding fails
     updatedListing.coordinates = null;
   }
@@ -195,7 +223,6 @@ module.exports.destroyListing = async (req, res) => {
     req.flash("error", "Something went wrong while deleting the listing!");
     res.redirect("/listings");
   }
-
 };
 
 module.exports.bookListingForm = async (req, res) => {
@@ -234,7 +261,10 @@ module.exports.availableRooms = async (req, res) => {
   }
 
   if (availableRooms.length === 0) {
-    req.flash("error", "This listing rooms is not available for the selected dates!");
+    req.flash(
+      "error",
+      "This listing rooms is not available for the selected dates!"
+    );
     return res.status(200).redirect(`/listing/${id}/book`);
   }
 
@@ -256,30 +286,32 @@ module.exports.availableRooms = async (req, res) => {
   res.render("listings/showRooms.ejs", { availableRooms, id, bookingData });
 };
 
-module.exports.showBookings = async(req, res) => {
+module.exports.showBookings = async (req, res) => {
   let userId = res.locals.currUser._id;
-  
+
   let user = await User.findById(userId).populate({
     path: "bookedListing",
     populate: {
       path: "rooms",
       populate: {
         path: "bookings",
-        match: { customer: userId } // Only get bookings for this user
-      }
-    }
+        match: { customer: userId }, // Only get bookings for this user
+      },
+    },
   });
-  
+
   // Filter out listings that don't have any bookings
-  const bookingData = user.bookedListing.filter(listing => {
-    return listing.rooms.some(room => room.bookings && room.bookings.length > 0);
+  const bookingData = user.bookedListing.filter((listing) => {
+    return listing.rooms.some(
+      (room) => room.bookings && room.bookings.length > 0
+    );
   });
-  
-  res.status(200).render("listings/myBookings.ejs", { 
+
+  res.status(200).render("listings/myBookings.ejs", {
     bookingData,
-    userId 
+    userId,
   });
-}
+};
 
 module.exports.bookRoom = async (req, res) => {
   const bookingData = req.body.booking;

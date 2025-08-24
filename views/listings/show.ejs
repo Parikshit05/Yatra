@@ -1,4 +1,31 @@
 <% layout("layouts/boilerplate") %>
+<style>
+  .map-container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-left: 4rem;
+  }
+  #map {
+  width: 60%;
+  height: 400px; /* adjust for desktop */
+  border-radius: 10px;
+}
+
+/* On smaller screens, reduce height */
+@media (max-width: 768px) {
+  #map {
+    height: 250px;
+  }
+}
+
+@media (max-width: 480px) {
+  #map {
+    height: 200px;
+  }
+}
+
+</style>
 <div class="row">
   <div class="col-8 offset-3 mt-3">
     <h3><%= listing.title %></h3>
@@ -168,10 +195,13 @@
       <% }; %>
     </div>
   </div>
-  <!-- <div class="map-container">
-    <span class="map-label-span">It's Located Here :</span>
-  <div id="map"></div>
-  </div> -->
+  <div class="map-container mb-5">
+  <div id="map" style="height: 400px;"></div>
+  </div>
 </div>
 
+<script>
+  const lat = <%= listing.coordinates?.latitude || 'null' %>;
+  const lon = <%= listing.coordinates?.longitude || 'null' %>;
+</script>
 <script src="/js/map.js"></script>

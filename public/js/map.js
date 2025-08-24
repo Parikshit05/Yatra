@@ -1,57 +1,32 @@
-// var map = L.map('map').setView([51.505, -0.09], 13);
-// console.log("Inside map.js");
-
-
-// L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//     maxZoom: 19,
-//     attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-// }).addTo(map);
-
-
 document.addEventListener("DOMContentLoaded", () => {
-  // Get the map container
   const mapContainer = document.getElementById("map");
-  
-  if (mapContainer) {
-    // Check if we have valid coordinates
-    const lat = parseFloat(document.querySelector('script').textContent.match(/lat = "([^"]*)"/)?.[1] || '');
-    const lon = parseFloat(document.querySelector('script').textContent.match(/lon = "([^"]*)"/)?.[1] || '');
-    
-    // Check if coordinates are valid numbers and not null/empty
-    if (lat && lon && !isNaN(lat) && !isNaN(lon) && lat !== 0 && lon !== 0) {
-      try {
-        // Try to initialize the map
-        const map = L.map("map").setView([lat, lon], 14);
-        
-        // Add OpenStreetMap tiles
-        L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-          maxZoom: 19,
-          attribution: '&copy; OpenStreetMap contributors'
-        }).addTo(map);
-        
-        // Add a marker
-        L.marker([lat, lon])
-          .addTo(map)
-          .bindPopup("📍 Location of this listing")
-          .openPopup();
-          
-      } catch (error) {
-        // If map initialization fails, show simple message
-        showSimpleMessage(mapContainer);
-      }
-    } else {
-      // If no valid coordinates, show simple message
+
+  if (mapContainer && lat != null && lon != null && !isNaN(lat) && !isNaN(lon)) {
+    try {
+      const map = L.map("map").setView([lat, lon], 14);
+
+      L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+        maxZoom: 19,
+        attribution: '&copy; OpenStreetMap contributors'
+      }).addTo(map);
+
+      L.marker([lat, lon])
+        .addTo(map)
+        .bindPopup("📍 Location of this listing")
+        .openPopup();
+
+    } catch (error) {
       showSimpleMessage(mapContainer);
     }
+  } else {
+    showSimpleMessage(mapContainer);
   }
 });
 
 function showSimpleMessage(mapContainer) {
-  // Get location information if available
   const locationElement = document.querySelector('.listing-location');
   const locationText = locationElement ? locationElement.textContent : 'Location information';
-  
-  // Show a simple message instead of the complex fallback
+
   mapContainer.innerHTML = `
     <div class="map-simple-message">
       <div class="simple-message-content">
@@ -70,4 +45,8 @@ function showSimpleMessage(mapContainer) {
     </div>
   `;
 }
-  
+
+
+window.addEventListener("resize", () => {
+  map.invalidateSize();
+});

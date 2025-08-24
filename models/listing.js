@@ -26,6 +26,12 @@ const listingSchema = new Schema({
     type: Schema.Types.ObjectId,
     ref: "User",
   },
+  rooms: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Room",
+    },
+  ],
 });
 
 listingSchema.post("findOneAndDelete", async (listing) => {

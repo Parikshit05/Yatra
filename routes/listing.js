@@ -7,6 +7,7 @@ const listingController = require("../controllers/listings.js");
 const multer = require("multer");
 const { storage } = require("../cloudConfig.js");
 const upload = multer({ storage });
+const validateBooking = require("../middleware.js").validateBooking;
 
 router
   .route("/")
@@ -31,6 +32,24 @@ router
     wrapAsync(listingController.updateListing)
   )
   .delete(isLoggedIn, isOwner, wrapAsync(listingController.destroyListing));
+
+//for booing a listing
+router.get("/:id/book", isLoggedIn, wrapAsync(listingController.bookListingForm));
+
+router.post(
+  "/:id/rooms",
+  isLoggedIn,
+  validateBooking,
+  wrapAsync(listingController.availableRooms)
+);
+
+router.post(
+  "/:id/book/:roomId",
+  isLoggedIn,
+  wrapAsync(listingController.bookRoom)
+)
+
+
 
 //Edit Route
 router.get(

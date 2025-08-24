@@ -1,4 +1,7 @@
 const Listing = require("../models/listing.js");
+const Room = require("../models/room");
+const User = require("../models/user");
+const Booking = require("../models/booking");
 
 module.exports.index = async (req, res) => {
   const allListings = await Listing.find({});
@@ -66,4 +69,62 @@ module.exports.destroyListing = async (req, res) => {
   await Listing.findByIdAndDelete(id);
   req.flash("success", "Listing Deleted!");
   res.redirect("/listings");
+};
+
+module.exports.bookListingForm = async (req, res) => {
+  let { id } = req.params;
+  let data = await Listing.findById(id).populate("owner");
+  if (!data) {
+    req.flash("error", "Listing not found!");
+    return res.status(404).redirect("/listing");
+  }
+  res.status(200).render("listings/book.ejs", { data });
+};
+
+module.exports.availableRooms = async (req, res) => {
+  let { id } = req.params;
+  let bookingData = req.body.booking;
+  let listing = await Listing.findById(id).populate({
+    path: "rooms",
+    populate: {
+      path: "bookings",
+    },
+  });
+  let isAvilable = true;
+  let availableRooms = [];
+
+  for (let room of listing.rooms) {
+    if (room && room.bookings) {
+      isAvilable = room.bookings.every(
+        (b) =>
+          new Date(b.checkin) >= new Date(bookingData.checkout) ||
+          new Date(b.checkout) <= new Date(bookingData.checkin)
+      );
+      if (isAvilable) {
+        availableRooms.push(room);
+      }
+    }
+  }
+
+  if (availableRooms.length === 0) {
+    req.flash("error", "This listing rooms is not available for the selected dates!");
+    return res.status(200).redirect(`/listing/${id}/book`);
+  }
+
+  // let newBooking = {
+  //   checkin: new Date(bookingData.checkin),
+  //   checkout: new Date(bookingData.checkout),
+  //   username: "Jay",
+  //   guests: {
+  //       total: bookingData.totalGuests,
+  //       adults: bookingData.adults,
+  //       children: bookingData.children || 0
+  //   },
+  //   customer: res.locals.currUser._id,
+  // };
+
+  // listing.bookings.push(newBooking);
+
+  // listing.save();
+  res.render("listings/showRooms.ejs", { availableRooms, id, bookingData });
 };

@@ -1,0 +1,76 @@
+<% layout('layouts/boilerplate') -%>
+<body>
+  <div class="d-flex flex-column flex-md-row justify-content-around mt-5 mb-5">
+    <div class="card booking-card">
+      <img
+        src="<%= data.image.url %>"
+        class="card-img-top show-img"
+        alt="Opps something went wrong"
+      />
+      <h4 class="card-title mt-4"><%= data.title %></h4>
+      <p><%= data.bio %></p>
+      <p>Owener Name : <%= data.owner.username %></p>
+      <p>Location : <%= data.location %>, <%= data.country %></p>
+      <p>Price : &#8377;<%= data.price.toLocaleString("en-IN") %> /Night</p>
+      <p>Category : <%= data.category %></p>
+      <p>Owner Contact : <%= data.owner.email %></p>
+    </div>
+    <hr class="d-md-none">
+    <div class="w-md-50 mb-3">
+      <h3 class="mb-3">Booking Form</h3>
+      <form action="/listings/<%= data._id %>/rooms" method="post" class="grid">
+        <div class="row">
+          <div class="col-md-6">
+            <label for="checkin-date">Chek In :</label>
+            <input
+              type="date"
+              class="form-control"
+              name="booking[checkin]"
+              id="checkin-date"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="checkout-date">Chek Out :</label>
+            <input
+              type="date"
+              class="form-control"
+              name="booking[checkout]"
+              id="checkout-date"
+            />
+          </div>
+        </div>
+        <div class="mt-3">
+          <label for="guests">No of Guests :</label>
+          <input
+            type="number"
+            class="form-control"
+            name="booking[totalGuests]"
+            id="guests"
+            min="1"
+          />
+        </div>
+        <div class="row mt-3">
+          <div class="col-md-6">
+            <label for="adults">Adults :</label>
+            <input
+              type="number"
+              class="form-control"
+              name="booking[adults]"
+              id="adults"
+            />
+          </div>
+          <div class="col-md-6">
+            <label for="adults">Children :</label>
+            <input
+              type="number"
+              class="form-control"
+              name="booking[children]"
+              id="children"
+            />
+          </div>
+          <button class="btn btn-info mt-3 col-10 offset-1" type="submit">Book now</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</body>

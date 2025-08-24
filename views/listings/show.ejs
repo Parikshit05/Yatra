@@ -33,6 +33,12 @@
     </form>
   </div>
   <% } %>
+
+  <% if(!(currUser && currUser._id.equals(listing.owner._id))) { %>
+  <a href="/listings/<%= listing._id %>/book">
+        <button class="btn btn-info offset-3" >Book Now</button>
+      </a>
+    <% } %>
   <div class="col-8 offset-3 mb-3">
     <hr />
     <% if(currUser) { %>

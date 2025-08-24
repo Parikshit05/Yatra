@@ -19,6 +19,26 @@ module.exports.saveRedirectUrl = (req, res, next) => {
   next();
 };
 
+module.exports.validateBooking = (req, res, next) => {
+  let bookingData = req.body.booking;
+  let { error } = bookingSchema.validate({
+    checkin: bookingData.checkin,
+    checkout: bookingData.checkout,
+    guests: {
+      total: bookingData.totalGuests,
+      adults: bookingData.adults,
+      children: bookingData.children || 0, 
+    },
+  });
+   if (error) {
+    req.flash("error", error.details[0].message);
+    res.redirect(`/listing/${req.params.id}/book`);
+  } else {
+    next();
+  }
+}
+
+
 module.exports.isOwner = async (req, res, next) => {
   let { id } = req.params;
   let listing = await Listing.findById(id);

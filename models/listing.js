@@ -22,6 +22,28 @@ const listingSchema = new Schema({
       ref: "Review",
     },
   ],
+  category: {
+    type: String,
+    enum: [
+      "trending",
+      "city",
+      "mountain",
+      "beach",
+      "forest",
+      "desert",
+      "castels",
+      "house-boat",
+      "amazing-pools",
+      "farms",
+      "island",
+      "camping",
+    ],
+    required: true,
+  },
+  coordinates: {
+    latitude: { type: Number, default: null },
+    longitude: { type: Number, default: null },
+  },
   owner: {
     type: Schema.Types.ObjectId,
     ref: "User",

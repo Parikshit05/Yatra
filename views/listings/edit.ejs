@@ -33,18 +33,34 @@
         >
         <div class="invalid-feedback">Description is required</div>
       </div>
+      <div class="row">
+      <div class="mb-3 col-md-5">
+        <label for="image" class="form-label">Upload New Image</label>
+        <input name="listing[image]" type="file" class="form-control" />
+      </div>
+      <div class="mb-3 col-md-7">
+                <label for="category" class="form-label"> Add Category : </label>
+              <!-- enum: ["city", "mountain", "beach", "forest", "desert", "castels", "house-boat", "amazing-pools", "farms", "island", "camping"], -->
+               
+                <select class="form-select" name="listing[category]" id="category">
+                    <% let categorys = [
+                    "city", "mountain", "beach", "forest", "desert", "castels", "house-boat", "amazing-pools", "farms", "island", "camping"
+               ] %>
+               <% categorys.forEach(category => { %>
+                        <option value="<%= category %>" <%= listing.category === category ? "selected" : "" %>><%= category %></option>
+                    <% }); %>
+                </select>
+              </div>
+      </div>
       <div class="mb-3">
         <p>Current Image</p>
         <img src="<%= orignalImageUrl %>" alt="" />
       </div>
-      <div class="mb-3">
-        <label for="image" class="form-label">Upload New Image</label>
-        <input name="listing[image]" type="file" class="form-control" />
-      </div>
-      <div class="row">
-        <div class="mb-3 col-md-4">
+
+      <div class="mb-3 ">
           <label for="price" class="form-label">Price</label>
           <input
+          id="price"
             name="listing[price]"
             type="number"
             value="<%= listing.price%>"
@@ -53,28 +69,52 @@
           />
           <div class="invalid-feedback">Price is required</div>
         </div>
-        <div class="mb-3 col-md-8">
-          <label for="country" class="form-label">Country</label>
-          <input
-            name="listing[country]"
-            type="text"
-            value="<%= listing.country%>"
-            class="form-control"
-            required
-          />
+
+
+
+      <div class="row">
+        
+        <div class="mb-3 col-md-5">
+        <label for="location" class="form-label">Location <span style="color: gray; font-size: small;">(Dont add country name)</span> :</label>
+            
+                <input id="location" class="form-select" type="text" name="listing[location]" value="<%= listing.location %>" required>
+          <ul id="suggestions" class="list-group" style="position:absolute; z-index:1000;"></ul>
+        <div class="invalid-feedback">Location is required</div>
+      </div>
+
+
+
+
+        <div class="mb-3 col-md-7">
+          <label for="country" class="form-label">
+                    Add Country :            
+                </label>
+                <select class="form-select mb-4" name="listing[country]" id="country">
+                    <option value="">Select a country</option>
+                    <% 
+                        let countries = [
+                            "Afghanistan", "Albania", "Algeria", "Andorra", "Angola", "Antigua and Barbuda", "Argentina", "Armenia", "Australia", 
+                            "Austria", "Azerbaijan", "Bahamas", "Bahrain", "Bangladesh", "Barbados", "Belarus", "Belgium", "Belize", "Benin", "Bhutan", 
+                            "Bolivia", "Bosnia and Herzegovina", "Botswana", "Brazil", "Brunei", "Bulgaria", "Burkina Faso", "Burundi", "Cambodia", 
+                            "Cameroon", "Canada", "Cape Verde", "Central African Republic", "Chad", "Chile", "China", "Colombia", "Comoros", "Congo", 
+                            "Costa Rica", "Croatia", "Cuba", "Cyprus", "Czech Republic", "Denmark", "Djibouti", "Dominica", "Dominican Republic", 
+                            "Ecuador", "Egypt", "El Salvador", "Equatorial Guinea", "Eritrea", "Estonia", "Ethiopia", "Fiji", "Finland", "France", 
+                            "Gabon", "Gambia", "Georgia", "Germany", "Ghana", "Greece", "Guatemala", "Guinea", "Guyana", "Haiti", "Honduras", 
+                            "Hungary", "Iceland", "India", "Indonesia", "Iran", "Iraq", "Ireland", "Italy", "Jamaica", "Japan", "Jordan", "Kazakhstan", 
+                            "Kenya", "South Korea", "Kuwait", "Laos", "Latvia", "Lebanon", "Libya", "Lithuania", "Luxembourg", "Madagascar", "Malaysia", 
+                            "Maldives", "Mali", "Malta", "Mexico", "Monaco", "Mongolia", "Montenegro", "Morocco", "Mozambique", "Myanmar", "Namibia", 
+                            "Nepal", "Netherlands", "New Zealand", "Nicaragua", "Nigeria", "Norway", "Oman", "Pakistan", "Palestine", "Panama", 
+                            "Paraguay", "Peru", "Philippines", "Poland", "Portugal", "Qatar", "Romania", "Russia", "Saudi Arabia", "Senegal", "Serbia", 
+                            "Singapore", "Slovakia", "South Africa", "Spain", "Sri Lanka", "Sweden", "Switzerland", "Thailand", "Tunisia", "Turkey", 
+                            "Ukraine", "United Arab Emirates", "United Kingdom", "United States", "Vietnam", "Yemen", "Zimbabwe"
+                        ]; 
+                    %>
+                    <% countries.forEach(country => { %>
+                        <option value="<%= country %>" <%= listing.country === country ? "selected" : "" %>><%= country %></option>
+                    <% }); %>
+                </select>
           <div class="invalid-feedback">Country name is required</div>
         </div>
-      </div>
-      <div class="mb-3">
-        <label for="location" class="form-label">Location</label>
-        <input
-          name="listing[location]"
-          type="text"
-          value="<%= listing.location%>"
-          class="form-control"
-          required
-        />
-        <div class="invalid-feedback">Location is required</div>
       </div>
 
       <button class="btn btn-dark edit-btn mt-3">Edit</button>
@@ -82,3 +122,5 @@
     </form>
   </div>
 </div>
+
+<script src="/js/location.js"></script>

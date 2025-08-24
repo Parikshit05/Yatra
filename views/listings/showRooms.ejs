@@ -1,0 +1,132 @@
+<% layout('layouts/boilerplate') -%>
+<div class="d-flex flex-column">
+  <% for(let room of availableRooms) { %>
+  <div class="card mt-3">
+    <div class="card-header"><%= room.highlight %></div>
+    <div class="card-body">
+      <div class="d-flex gap-3">
+        <% for(let feature of room.amenities) { %> <% const iconClassMap = {
+        wifi: "fa-wifi", tv: "fa-tv", kichen:"fa-kitchen-set", meal: "fa-spoon",
+        pickup: "fa-taxi", }; const icon = iconClassMap[feature] ||
+        "fa-question-circle";%>
+
+        <div class="d-flex gap-2 align-items-center">
+          <i class="fa-solid <%= icon %>"></i>
+          <p class="card-text"><%= feature %></p>
+        </div>
+        <% } %>
+      </div>
+      <p class="card-text mt-3">
+        <% if (room.ac) { %>
+        <i class="fa-solid fa-wind"></i> <span>Air Conditioning</span>
+        <% } else { %>
+        <i class="fa-solid fa-fan"></i> <span>Non A/C</span>
+        <% } %>
+      </p>
+      <p class="card-text">Max Number of Guests :<%= room.maxCapacity %></p>
+      <p class="card-text">&#8377;<%= room.price %> /Night</p>
+    </div>
+    <form
+      action="#"
+      method="post"
+      class="m-2 razorpay-form"
+      data-listing-id="<%= id %>"
+      data-room-id="<%= room._id %>"
+    >
+      <input
+        type="hidden"
+        name="booking[checkin]"
+        value="<%= bookingData.checkin %>"
+      />
+      <input
+        type="hidden"
+        name="booking[checkout]"
+        value="<%= bookingData.checkout %>"
+      />
+      <input
+        type="hidden"
+        name="booking[totalGuests]"
+        value="<%= bookingData.totalGuests %>"
+      />
+      <input
+        type="hidden"
+        name="booking[adults]"
+        value="<%= bookingData.adults %>"
+      />
+      <input
+        type="hidden"
+        name="booking[children]"
+        value="<%= bookingData.children %>"
+      />
+      <input type="hidden" name="price" value="<%= room.price %>" />
+      <button class="btn btn-info" id="rzp-button">Book Now</button>
+    </form>
+  </div>
+  <% } %>
+</div>
+
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+<script>
+  document.querySelectorAll(".razorpay-form").forEach((form) => {
+    form.addEventListener("submit", async function (e) {
+      e.preventDefault();
+
+      const formData = new FormData(form);
+      const bookingData = {
+        checkin: formData.get("booking[checkin]"),
+        checkout: formData.get("booking[checkout]"),
+        totalGuests: formData.get("booking[totalGuests]"),
+        adults: formData.get("booking[adults]"),
+        children: formData.get("booking[children]"),
+        price: formData.get("price"),
+      };
+
+      const res = await fetch("/payment/order", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ bookingData }),
+      });
+
+      const orderData = await res.json();
+
+      const options = {
+        key: "<%= process.env.RAZORPAY_KEY_ID %>",
+        amount: orderData.amount,
+        currency: "INR",
+        name: "Room Booking",
+        description: "Payment for booking",
+        order_id: orderData.id,
+        handler: async function (response) {
+          const listingId = form.dataset.listingId;
+          const roomId = form.dataset.roomId;
+
+          const data = {
+            razorpay_payment_id: response.razorpay_payment_id,
+            razorpay_order_id: response.razorpay_order_id,
+            razorpay_signature: response.razorpay_signature,
+            booking: bookingData, // Add booking info for DB
+          };
+
+          const bookingRes = await fetch(
+            `/listing/${listingId}/book/${roomId}`,
+            {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+              },
+              body: JSON.stringify(data),
+            }
+          );
+
+          const resultHTML = await bookingRes.text();
+          document.open();
+          document.write(resultHTML);
+          document.close();
+        },
+      };
+
+      const rzp = new Razorpay(options);
+      rzp.open();
+    });
+  });
+</script>

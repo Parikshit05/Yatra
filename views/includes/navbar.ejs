@@ -59,26 +59,23 @@
       </div>
 
       <div class="navbar-nav ms-auto">
-        
-
         <!-- Dark Mode Toggle -->
-         <div class="dark-option">
-
+        <div class="dark-option">
           <label class="switch mt-0.7">
-          <input type="checkbox" id="darkModeToggle" />
-          <span class="slider round"></span>
-        </label>
+            <input type="checkbox" id="darkModeToggle" />
+            <span class="slider round"></span>
+          </label>
 
-
-        <button
-          id="darkModeToggleBtn"
-          class="btn nav-link p-0 ms-2"
-          style="border: none; background: transparent; font-size: 1.4rem"
-        >
-          <i id="darkModeIcon" class="fa fa-moon"></i>
-        </button>
+          <button
+            id="darkModeToggleBtn"
+            class="btn nav-link p-0 ms-2"
+            style="border: none; background: transparent; font-size: 1.4rem"
+          >
+            <i id="darkModeIcon" class="fa fa-moon"></i>
+          </button>
         </div>
-
+        <a class="nav-link tog" href="/listings/bookings"> Bookings</a>
+        <a class="nav-link tog" href="/admin"> Your Listings</a>
         <a class="nav-link tog" href="/listings/new">Yatra your home</a>
         <% if(!currUser) { %>
         <a class="nav-link tog" href="/signup"><b>Sign up</b></a>
@@ -92,5 +89,3 @@
 </nav>
 
 <script src="/js/toggleDark.js"></script>
-
-

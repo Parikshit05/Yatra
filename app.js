@@ -14,6 +14,8 @@ const flash = require("connect-flash");
 const passport = require("passport");
 const LocalStrategy = require("passport-local");
 const User = require("./models/user.js");
+const adminRoute = require("./routes/admin");
+const paymentRoutes = require('./routes/payment');
 
 const listingsRouter = require("./routes/listing.js");
 const reviewsRouter = require("./routes/review.js");
@@ -89,6 +91,11 @@ app.use((req, res, next) => {
 app.use("/listings", listingsRouter);
 app.use("/listings/:id/reviews", reviewsRouter);
 app.use("/", userRouter);
+//*for admin
+    app.use("/admin", adminRoute )
+
+    //*For payment
+    app.use('/payment', paymentRoutes);
 
 // app.all("*" ,(req, res, next) => {
 //      next(new ExpressError(404,"Page Not Found!"));

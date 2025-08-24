@@ -1,0 +1,60 @@
+<% layout('layouts/boilerplate') -%>
+<link rel="stylesheet" href="/css/admin.css" />
+<div>
+  <div class="d-flex justify-content-between align-items-center mt-3">
+    <h2>Admin Page</h2>
+    <a href="/listing/new" class="btn btn-dark">
+      <span class="navbar-options-link">+ Want to add</span></a
+    >
+  </div>
+  <hr />
+  <div class="admin-listing-card-container">
+    <% for(let data of datas) { %>
+    <div class="admin-listing-card d-flex mb-3">
+      <div class="admin-card-image-box">
+        <img src="<%= data.image.url %>" alt="Listing image" />
+      </div>
+      <div class="m-md-3 p-2 w-100">
+        <div
+          class="mb-m-3 w-100 d-flex justify-content-between align-items-start"
+        >
+          <div >
+            <h4 class="card-title"><%= data.title %></h4>
+            <p class="card-text opacity-75"><%= data.bio %></p>
+          </div>
+          <div class="d-md-flex gap-2 align-items-center">
+            <a href="/admin/<%= data._id %>/add-room" class="btn btn-info admin-addroom-btn"
+              >Add Room</a
+            >
+            <a href="/listings/<%= data._id %>/edit" class="btn btn-primary admin-edit-btn"
+              >Edit Details</a
+            >
+            <form
+              method="post"
+              action="/listings/<%= data._id %>?_method=DELETE"
+              class="delete-form admin-delete-btn"
+            >
+              <button type="submit" class="btn btn-danger">
+                Delete Listing
+              </button>
+            </form>
+          </div>
+        </div>
+        <div class="d-flex gap-2 mt-2">
+          <p class="card-category"><%= data.category %></p>
+          <p class="card-category"><%= data.location %></p>
+          <p class="card-category"><%= data.country %></p>
+        </div>
+        <div class="w-75">
+          <p><%= data.description %></p>
+        </div>
+        <div class="d-flex justify-content-between align-items-center">
+          <p class="listing-price">&#8377;<%= data.price.toLocaleString("en-IN") %></p>
+      <a href="/admin/<%= data._id %>" class="readmore-btn">Read more</a>
+        </div>
+      </div>
+
+    </div>
+    <% } %>
+  </div>
+</div>

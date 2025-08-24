@@ -19,6 +19,12 @@ router
     wrapAsync(listingController.createListing)
   );
 
+router.get(
+  "/bookings",
+  isLoggedIn,
+  wrapAsync(listingController.showBookings)
+)
+
 router.get("/new", isLoggedIn, listingController.renderNewForm);
 
 router
@@ -50,7 +56,6 @@ router.post(
 )
 
 
-
 //Edit Route
 router.get(
   "/:id/edit/",
@@ -58,5 +63,7 @@ router.get(
   isOwner,
   wrapAsync(listingController.renderEditForm)
 );
+
+
 
 module.exports = router;

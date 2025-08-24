@@ -1,7 +1,7 @@
 const Listing = require("../models/listing.js");
-const Room = require("../models/room");
-const User = require("../models/user");
-const Booking = require("../models/booking");
+const Room = require("../models/room.js");
+const User = require("../models/user.js");
+const Booking = require("../models/booking.js");
 
 module.exports.index = async (req, res) => {
   const allListings = await Listing.find({});
@@ -128,3 +128,28 @@ module.exports.availableRooms = async (req, res) => {
   // listing.save();
   res.render("listings/showRooms.ejs", { availableRooms, id, bookingData });
 };
+
+module.exports.showBookings = async(req, res) => {
+  let userId = res.locals.currUser._id;
+  
+  let user = await User.findById(userId).populate({
+    path: "bookedListing",
+    populate: {
+      path: "rooms",
+      populate: {
+        path: "bookings",
+        match: { customer: userId } // Only get bookings for this user
+      }
+    }
+  });
+  
+  // Filter out listings that don't have any bookings
+  const bookingData = user.bookedListing.filter(listing => {
+    return listing.rooms.some(room => room.bookings && room.bookings.length > 0);
+  });
+  
+  res.status(200).render("listings/myBookings.ejs", { 
+    bookingData,
+    userId 
+  });
+}

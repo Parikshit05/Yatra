@@ -1,0 +1,72 @@
+hr {
+    border: 1px solid black
+}
+
+.admin-listing-card-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.admin-listing-card a {
+    text-decoration: none;
+    color: black;
+}
+
+.admin-listing-card {
+    width: 100%;
+    max-height: 15rem;
+    border: 2px solid rgba(128, 128, 128, 0.525);
+    border-radius: 1.1rem;
+    display: flex;
+}
+
+.admin-card-image-box {
+    width: 25%;
+    height: auto;
+}
+
+.admin-card-image-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 1rem 0 0  1rem;
+}
+
+.admin-listing-card .card-category {
+    background-color: black;
+    color: white;
+    width: fit-content;
+    padding: 3px;
+    border-radius: 0.3rem;
+}
+
+@media (max-width: 768px) {
+    .admin-listing-card-container {
+        flex-direction: column;
+    }
+
+    .admin-listing-card {
+        flex-direction: column;
+        max-height: 100%;
+    }
+
+    .admin-card-image-box {
+        width: 100%;
+        height: 20rem;
+    }
+
+    .admin-card-image-box img {
+        border-radius: 1rem 1rem 0 0;
+    }
+
+    .admin-edit-btn, .admin-delete-btn {
+        display: none;
+    }
+
+    .admin-addroom-btn {
+        display: block;
+        width: fit-content;
+        text-wrap-mode: nowrap;
+    }
+}

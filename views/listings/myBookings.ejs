@@ -1,0 +1,131 @@
+<% layout('layouts/boilerplate') -%>
+<link rel="stylesheet" href="/css/myBookings.css">
+<div class="container py-4">
+  <h2 class="fw-bold mb-4">My Bookings</h2>
+  
+  <% if(bookingData.length === 0) { %>
+    <div class="text-center py-5">
+      <i class="fas fa-calendar-times fa-4x text-muted mb-3"></i>
+      <h4>No bookings found</h4>
+      <p class="text-muted">You don't have any active bookings at the moment.</p>
+      <a href="/listings" class="btn btn-danger mt-3">
+        <i class="fas fa-search me-2"></i>Browse Properties
+      </a>
+    </div>
+  <% } else { %>
+    <% for(let listing of bookingData) { %>
+      <div class="card booking-card">
+        <div class="row g-0">
+          <!-- Image Column -->
+          <div class="col-md-3">
+            <div class="card-img-container h-100">
+              <img src="<%= listing.image.url %>" alt="<%= listing.title %>" class="img-fluid h-100">
+            </div>
+          </div>
+          
+          <!-- Content Column -->
+          <div class="col-md-9">
+            <div class="card-body">
+              <!-- Property Header -->
+              <div class="d-flex justify-content-between align-items-start mb-3">
+                <div>
+                  <h4 class="property-title"><%= listing.title %></h4>
+                  <p class="text-muted mb-2 text-truncate-2"><%= listing.bio %></p>
+                </div>
+                <div>
+                  <span class="badge bg-secondary rounded-pill">
+                    <i class="fas fa-door-open me-1"></i>
+                    <%= listing.rooms ? listing.rooms.length : 0 %> Rooms
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Rooms & Bookings -->
+              <% if(listing.rooms && listing.rooms.length > 0) { %>
+                <% for(let room of listing.rooms) { %>
+                  <% if(room.bookings && room.bookings.filter(b => b.customer.equals(userId)).length > 0) { %>
+                    <div class="room-details">
+                      <!-- Room Header -->
+                      <div class="room-header d-flex justify-content-between align-items-center">
+                        <div>
+                          <h5 class="mb-0">
+                            <i class="fas fa-bed me-2 text-secondary"></i>
+                            Room Details
+                          </h5>
+                        </div>
+                        <div class="price-tag">
+                          ₹<%= room.price %>/night
+                        </div>
+                      </div>
+                      
+                      <!-- Room Info -->
+                      <div class="row mb-3">
+                        <div class="col-md-6">
+                          <p class="mb-2">
+                            <i class="fas fa-star text-warning me-2"></i>
+                            <strong>Highlights:</strong> <%= room.highlight %>
+                          </p>
+                          <p class="mb-2">
+                            <i class="fas fa-users me-2 text-secondary"></i>
+                            <strong>Max Capacity:</strong> <%= room.maxCapacity %> people
+                          </p>
+                        </div>
+                        <div class="col-md-6">
+                          <p class="mb-2"><strong>Amenities:</strong></p>
+                          <div>
+                            <% room.amenities.forEach(amenity => { %>
+                              <span class="amenity-badge">
+                                <%= amenity %>
+                              </span>
+                            <% }) %>
+                          </div>
+                        </div>
+                      </div>
+                      
+                      <!-- Booking Details -->
+                      <div class="room-section">
+                        <h6 class="mb-3">Your Booking Details</h6>
+                        <% room.bookings.filter(b => b.customer.equals(userId)).forEach(booking => { %>
+                          <div class="booking-date">
+                            <div class="row">
+                              <div class="col-md-3">
+                                <p class="booking-info-label">
+                                  <i class="fas fa-calendar-alt text-info me-2"></i>Check-in
+                                </p>
+                                <p class="mb-0"><strong><%= booking.checkin.toDateString() %></strong></p>
+                              </div>
+                              <div class="col-md-3">
+                                <p class="booking-info-label">
+                                  <i class="fas fa-calendar-check text-success me-2"></i>Check-out
+                                </p>
+                                <p class="mb-0"><strong><%= booking.checkout.toDateString() %></strong></p>
+                              </div>
+                              <div class="col-md-3">
+                                <p class="booking-info-label">
+                                  <i class="fas fa-user me-2"></i>Adults
+                                </p>
+                                <p class="mb-0"><%= booking.guests.adults %></p>
+                              </div>
+                              <div class="col-md-3">
+                                <p class="booking-info-label">
+                                  <i class="fas fa-child me-2"></i>Children
+                                </p>
+                                <p class="mb-0"><%= booking.guests.children %></p>
+                              </div>
+                            </div>
+                          </div>
+                        <% }) %>
+                      </div>
+                    </div>
+                  <% } %>
+                <% } %>
+              <% } else { %>
+                <div class="alert alert-info">No reservations found for this property.</div>
+              <% } %>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% } %>
+  <% } %>
+</div>

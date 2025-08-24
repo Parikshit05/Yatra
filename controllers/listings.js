@@ -2,10 +2,34 @@ const Listing = require("../models/listing.js");
 const Room = require("../models/room.js");
 const User = require("../models/user.js");
 const Booking = require("../models/booking.js");
+const cloudinary = require("cloudinary").v2;
 
 module.exports.index = async (req, res) => {
-  const allListings = await Listing.find({});
-  res.render("./listings/index.ejs", { allListings });
+  // const allListings = await Listing.find({});
+  // res.render("./listings/index.ejs", { allListings });
+  let allListings = await Listing.find();
+
+  try {
+    const category = req.query.category;
+    if (category !== undefined) {
+      allListings = allListings.filter((data) => data.category === category);
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  try {
+    const searchValue = req.query.q;
+    if (searchValue !== undefined) {
+      allListings = allListings.filter((data) =>
+        data.title.toLowerCase().includes(searchValue.toLowerCase())
+      );
+    }
+  } catch (err) {
+    console.log(err);
+  }
+
+  res.render("listings/index.ejs", { allListings });
 };
 
 module.exports.renderNewForm = (req, res) => {
@@ -31,9 +55,46 @@ module.exports.createListing = async (req, res, next) => {
     const { path: url, filename } = req.file;
     newListing.image = { url, filename };
   }
+
+  const fullLocation = `${newListing.location}, ${newListing.country}`;
+
+    // Try to get coordinates from geocoding API
+    try {
+      const geoRes = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+          fullLocation
+        )}`
+      );
+
+      let geoData = [];
+      if (geoRes.ok) {
+        const contentType = geoRes.headers.get('content-type');
+        if (contentType && contentType.includes('application/json')) {
+          geoData = await geoRes.json();
+        }
+      }
+      
+      if (geoData && geoData.length > 0) {
+        const latitude = parseFloat(geoData[0]?.lat) || 0;
+        const longitude = parseFloat(geoData[0]?.lon) || 0;
+        
+        if (latitude !== 0 && longitude !== 0) {
+          newListing.coordinates = { latitude, longitude };
+        } else {
+          newListing.coordinates = null;
+        }
+      } else {
+        newListing.coordinates = null;
+      }
+    } catch (geocodingError) {
+      console.error('Geocoding API error:', geocodingError);
+      // Set coordinates to null when geocoding fails
+      newListing.coordinates = null;
+    }
+
   await newListing.save();
   req.flash("success", "New Listing Created!");
-  res.redirect("/listings");
+  res.redirect("/admin");
 };
 
 module.exports.renderEditForm = async (req, res) => {
@@ -51,24 +112,90 @@ module.exports.renderEditForm = async (req, res) => {
 
 module.exports.updateListing = async (req, res) => {
   let { id } = req.params;
-  let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+  // let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
+
+  let updatedListing = await Listing.findByIdAndUpdate(id, { ...req.body.listing });
 
   if (typeof req.file !== "undefined") {
     let url = req.file.path;
     let filename = req.file.filename;
-    listing.image = { url, filename };
-    await listing.save();
+    updatedListing.image = { url, filename };
+    
   }
 
+const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`;
+  
+  // Try to get coordinates from geocoding API
+  try {
+    const geoRes = await fetch(
+      `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
+        fullLocation
+      )}`
+    );
+
+    let geoData = [];
+    if (geoRes.ok) {
+      const contentType = geoRes.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        geoData = await geoRes.json();
+      }
+    }
+    
+    if (geoData && geoData.length > 0) {
+      const latitude = parseFloat(geoData[0]?.lat) || 0;
+      const longitude = parseFloat(geoData[0]?.lon) || 0;
+      
+      if (latitude !== 0 && longitude !== 0) {
+        updatedListing.coordinates = { latitude, longitude };
+      } else {
+        updatedListing.coordinates = null;
+      }
+    } else {
+      updatedListing.coordinates = null;
+    }
+  } catch (geocodingError) {
+    console.error('Geocoding API error:', geocodingError);
+    // Set coordinates to null when geocoding fails
+    updatedListing.coordinates = null;
+  }
+
+  await updatedListing.save();
   req.flash("success", "Listing Updated!");
   res.redirect(`/listings/${id}`);
 };
 
 module.exports.destroyListing = async (req, res) => {
-  let { id } = req.params;
-  await Listing.findByIdAndDelete(id);
-  req.flash("success", "Listing Deleted!");
-  res.redirect("/listings");
+  // let { id } = req.params;
+  // await Listing.findByIdAndDelete(id);
+  // req.flash("success", "Listing Deleted!");
+  // res.redirect("/listings");
+
+  try {
+    const { id } = req.params;
+
+    // Find the listing first
+    const listing = await Listing.findById(id);
+    if (!listing) {
+      req.flash("error", "Listing not found!");
+      return res.redirect("/listings");
+    }
+
+    // Delete the image from Cloudinary if it exists
+    if (listing.image && listing.image.filename) {
+      await cloudinary.uploader.destroy(listing.image.filename);
+    }
+
+    // Delete the listing (this will also trigger your post 'findOneAndDelete' hook to remove reviews)
+    await Listing.findByIdAndDelete(id);
+
+    req.flash("success", "Listing Deleted!");
+    res.redirect("/listings");
+  } catch (err) {
+    console.error(err);
+    req.flash("error", "Something went wrong while deleting the listing!");
+    res.redirect("/listings");
+  }
+
 };
 
 module.exports.bookListingForm = async (req, res) => {
@@ -153,3 +280,36 @@ module.exports.showBookings = async(req, res) => {
     userId 
   });
 }
+
+module.exports.bookRoom = async (req, res) => {
+  const bookingData = req.body.booking;
+  const payment = {
+    payment_id: req.body.razorpay_payment_id,
+    order_id: req.body.razorpay_order_id,
+    signature: req.body.razorpay_signature,
+  };
+
+  let { id, roomId } = req.params;
+  let listing = await Listing.findById(id).populate("rooms");
+  let room = await Room.findById(roomId).populate("bookings");
+  let newBooking = new Booking({
+    checkin: new Date(bookingData.checkin),
+    checkout: new Date(bookingData.checkout),
+    guests: {
+      total: bookingData.totalGuests,
+      adults: bookingData.adults,
+      children: bookingData.children || 0,
+    },
+    customer: res.locals.currUser._id,
+  });
+
+  let user = await User.findById(res.locals.currUser._id);
+  user.bookedListing.push(listing._id);
+  user.save();
+
+  await newBooking.save();
+  await room.bookings.push(newBooking._id);
+  await room.save();
+
+  res.status(200).render("payment/success.ejs", { payment });
+};

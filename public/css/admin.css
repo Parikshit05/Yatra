@@ -34,7 +34,7 @@ hr {
 }
 
 .admin-listing-card .card-category {
-    background-color: black;
+    background-color: #3f3f3f;
     color: white;
     width: fit-content;
     padding: 3px;
@@ -69,4 +69,9 @@ hr {
         width: fit-content;
         text-wrap-mode: nowrap;
     }
+}
+
+
+.card-edit-krna{
+    border: 1px solid white !important;
 }

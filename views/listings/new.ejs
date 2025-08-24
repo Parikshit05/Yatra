@@ -13,6 +13,7 @@
       <div class="mb-3">
         <label for="title" class="form-label">Title</label>
         <input
+        id="title"
           name="listing[title]"
           type="text"
           placeholder="Enter title"
@@ -24,6 +25,7 @@
       <div class="mb-3">
         <label for="description" class="form-label">Description</label>
         <textarea
+        id="description"
           name="listing[description]"
           type="text"
           placeholder="Enter the description"
@@ -36,6 +38,7 @@
       <div class="mb-3 col-md-4">
         <label for="image" class="form-label">Upload Image</label>
         <input
+        id="image"
           name="listing[image]"
           type="file"
           class="form-control"
@@ -46,7 +49,6 @@
          <label for="category" class="form-label"> Add Category : </label>
         <!-- enum: ["city", "mountain", "beach", "forest", "desert", "castels", "house-boat", "amazing-pools", "farms", "island", "camping"], -->
           <select class="form-select" name="listing[category]" id="category">
-            <option value="trending">Trending</option>
             <option value="city">City</option>
             <option value="mountain">Mountain</option>
             <option value="beach">Beach</option>
@@ -66,6 +68,7 @@
         <div class="mb-3 col-md-4">
           <label for="price" class="form-label">Price</label>
           <input
+            id="price"
             name="listing[price]"
             placeholder="Enter price"
             class="form-control"

@@ -269,6 +269,35 @@ body.dark-mode #comment{
     color: #fff !important;
 }
 
+body.dark-mode #title{
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode #description {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode #image {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode #location{
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode #country {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode #price {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode #category {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+
 /* Light mode (default) */
 #mainFooter, f-info {
   background-color: #f8f9fa;
@@ -277,7 +306,7 @@ body.dark-mode #comment{
 
 /* Dark mode */
 body.dark-mode #mainFooter, f-info {
-  border-top: 1px solid #fff;
+  border-top: 1px solid #bbb;
   background-color: #121212 !important;
   color: #f5f5f5 !important;
 }

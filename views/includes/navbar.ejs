@@ -23,7 +23,7 @@
 </style>
 
 <nav
-  class="navbar navbar-expand-md navbar-light bg-light border-bottom sticky-top"
+  class="navbar navbar-expand-md navbar-light bg-light sticky-top" style="border-bottom: 0.7px solid #bbb"
 >
   <div class="container-fluid">
     <a class="navbar-brand" href="/listings"
@@ -46,11 +46,13 @@
       </div>
 
       <div class="navbar-nav ms-auto">
-        <form class="d-flex" role="search">
+        <form class="d-flex" role="search" method="GET" action="/listings">
           <input
-            class="form-control me-2 search-inp"
+            class="form-control me-2 search-inp" style="border: 1px solid #bbb; border-radius: 0.5rem;"
             type="search"
             placeholder="Search destinations"
+            aria-label="Search"
+            name="q"
           />
           <button class="btn btn-search" type="submit">
             <i class="fa-solid fa-magnifying-glass"></i>Search

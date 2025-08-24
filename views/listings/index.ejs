@@ -8,7 +8,7 @@
     justify-content: center;
   }
 
-  /* .filter {
+  .filter {
     text-align: center;
     margin-right: 2rem;
     margin-top: 2rem;
@@ -22,7 +22,7 @@
 
   .filter p {
     font-size: 0.8rem;
-  } */
+  }
 
   /* Parikshit Pandey */
   .tax-info {
@@ -40,65 +40,89 @@
     align-items: center;
   }
 
+  #filters a{
+    text-decoration: none;
+    color: inherit;
+  }
 </style>
 
+
 <div id="filters">
-  <!-- <div class="filter">
-    <div><i class="fa-solid fa-fire"></i></div>
-    <p>Trending</p>
-  </div>
+  <a href="/listings">
+    <div class="filter">
+      <div><i class="fa-solid fa-list"></i></div>
+      <p>All</p>
+    </div>
+  </a>
 
+
+  <a href="/listings?category=mountain">
   <div class="filter">
-    <div><i class="fa-solid fa-bed"></i></div>
-    <p>Rooms</p>
-  </div>
+    <div><i class="fa-solid fa-mountain-sun"></i></div>
+    <p>Mountain</p>
+  </div></a>
 
+  <a href="/listings?category=city">
   <div class="filter">
-    <div><i class="fa-solid fa-mountain-city"></i></div>
-    <p>Iconic Cities</p>
-  </div>
+    <div><i class="fa-solid fa-city"></i></div>
+    <p>City</p>
+  </div></a>
 
+    <a href="/listings?category=beach">
   <div class="filter">
-    <div><i class="fa-solid fa-mountain"></i></div>
-    <p>Mountains</p>
-  </div>
+    <div><i class="fa-solid fa-umbrella-beach"></i></div>
+    <p>Beach</p>
+  </div></a>
 
+  <a href="/listings?category=forest">
+  <div class="filter">
+    <div><i class="fa-solid fa-tree"></i></div>
+    <p>Forest</p>
+  </div></a>
+
+  <a href="/listings?category=desert">
+  <div class="filter">
+    <div><i class="fa-solid fa-sun-plant-wilt"></i></div>
+    <p>Desert</p>
+  </div></a>
+
+  <a href="/listings?category=castels">
   <div class="filter">
     <div><i class="fa-brands fa-fort-awesome"></i></div>
-    <p>Castles</p>
-  </div>
+    <p>Castels</p>
+  </div></a>
 
+  <a href="/listings?category=house-boat">
   <div class="filter">
-    <div><i class="fa-solid fa-person-swimming"></i></div>
-    <p>Amazing Pools</p>
-  </div>
+    <div><i class="fa-solid fa-ship"></i></div>
+    <p>House Boat</p>
+  </div></a>
 
+  <a href="/listings?category=amazing-pools">
+  <div class="filter">
+    <div><i class="fa-solid fa-water-ladder"></i></div>
+    <p>Amazing Pools</p>
+  </div></a>
+
+  <a href="/listings?category=farms">
+  <div class="filter">
+    <div><i class="fa-solid fa-tractor"></i></div>
+    <p>Farms</p>
+  </div></a>
+
+  <a href="/listings?category=island">
+  <div class="filter">
+    <div><i class="fa-solid fa-anchor"></i></div>
+    <p>IsLand</p>
+  </div></a>
+
+  <a href="/listings?category=camping">
   <div class="filter">
     <div><i class="fa-solid fa-campground"></i></div>
     <p>Camping</p>
-  </div>
+  </div></a>
 
-  <div class="filter">
-    <div><i class="fa-solid fa-cow"></i></div>
-    <p>Farms</p>
-  </div>
-
-  <div class="filter">
-    <div><i class="fa-solid fa-snowflake"></i></div>
-    <p>Arctic</p>
-  </div>
-
-  <div class="filter">
-    <div><i class="fa-solid fa-igloo"></i></div>
-    <p>Domes</p>
-  </div>
-
-  <div class="filter">
-    <div><i class="fa-solid fa-ship"></i></div>
-    <p>Boats</p>
-  </div> -->
-
-  <div class="tax-toggle">
+  <div class="tax-toggle" style="border: 0.1px solid #bbb">
     <div class="form-check-reverse form-switch">
       <input
         class="form-check-input"
@@ -106,13 +130,16 @@
         role="switch"
         id="switchCheckDefault"
       />
-      <label class="form-check-label" for="switchCheckDefault"
-        >Display total after taxes</label
+      <label class="form-check-label" for="switchCheckDefault">
+        Display total after taxes</label
       >
     </div>
   </div>
 </div>
 <div class="row row-cols-lg-3 row-cols-md-2 row-cols-sm-1 md-2 mt-3">
+  <% if(allListings.length === 0) { %>
+      <h4 class="no-listing-msg mt-3">Opps! Sorry no listing available :(</h4>
+      <% } else { %>
   <% for (let listing of allListings ){ %>
   <a href="/listings/<%= listing._id %>" class="listing-link">
     <div class="card col listing-card">
@@ -128,13 +155,14 @@
           <b><%= listing.title %></b><br />
           <!-- &#8377; <%= listing.price %> /night -->
           <% if (listing.price != null && !isNaN(listing.price)) { %> &#8377;
-          <%= Number(listing.price).toLocaleString("en-IN") %> /night <% } else
-          { %> Price not available <% } %>
+          <%= Number(listing.price).toLocaleString("en-IN") %> /night <% } else { %>
+           Price not available <% } %>
           <i class="tax-info">&nbsp; &nbsp;+18% GST</i>
         </p>
       </div>
     </div>
   </a>
+  <% } %>
   <% } %>
 </div>
 

@@ -35,7 +35,7 @@
   </div>
   <br /><br />
       <% if(currUser && data.owner._id.equals(currUser._id)) {%>
-          <div class="btns">
+          <div class="btns mb-4">
           <a href="/listings/<%= data._id %>" class="btn btn-dark offset-3 edit-btn"
             >Go to Listing</a
           >
@@ -46,10 +46,10 @@
           >
           </div>
           <hr>
-          <div class="d-flex flex-column">
+          <div class="d-flex flex-column mb-5">
             <% for(let room of data.rooms) { %>
-                <div class="card mt-3">
-                    <div class="card-header">
+                <div class="card mt-3" style="border: 1px solid #ccc; border-radius: 8px;">
+                    <div class="card-header" style="border-bottom: 1px solid #ccc;">
                       <%= room.highlight %>
                     </div>
                     <div class="card-body">

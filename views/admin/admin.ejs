@@ -3,7 +3,7 @@
 <div>
   <div class="d-flex justify-content-between align-items-center mt-3">
     <h2>Admin Page</h2>
-    <a href="/listing/new" class="btn btn-dark">
+    <a href="/listings/new" class="btn btn-dark">
       <span class="navbar-options-link">+ Want to add</span></a
     >
   </div>
@@ -23,10 +23,10 @@
             <p class="card-text opacity-75"><%= data.bio %></p>
           </div>
           <div class="d-md-flex gap-2 align-items-center">
-            <a href="/admin/<%= data._id %>/add-room" class="btn btn-info admin-addroom-btn"
+            <a href="/admin/<%= data._id %>/add-room" class="btn btn-dark admin-addroom-btn" style="color: white; "
               >Add Room</a
             >
-            <a href="/listings/<%= data._id %>/edit" class="btn btn-primary admin-edit-btn"
+            <a href="/listings/<%= data._id %>/edit" class="btn btn-danger admin-edit-btn" style="color: white;"
               >Edit Details</a
             >
             <form
@@ -34,7 +34,7 @@
               action="/listings/<%= data._id %>?_method=DELETE"
               class="delete-form admin-delete-btn"
             >
-              <button type="submit" class="btn btn-danger">
+              <button type="submit" class="btn btn-dark" style="color: white">
                 Delete Listing
               </button>
             </form>
@@ -50,7 +50,7 @@
         </div>
         <div class="d-flex justify-content-between align-items-center">
           <p class="listing-price">&#8377;<%= data.price.toLocaleString("en-IN") %></p>
-      <a href="/admin/<%= data._id %>" class="readmore-btn">Read more</a>
+      <a href="/admin/<%= data._id %>" class="readmore-btn btn btn-dark btn-sm" style="color: white; background-color: #3f3f3f;">Read more</a>
         </div>
       </div>
 

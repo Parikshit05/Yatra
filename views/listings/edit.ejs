@@ -16,6 +16,7 @@
           name="listing[title]"
           type="text"
           value="<%= listing.title%>"
+          id="title"
           class="form-control"
           required
         />
@@ -26,6 +27,7 @@
         <textarea
           name="listing[description]"
           type="text"
+          id="description"
           class="form-control"
           required
         >
@@ -36,7 +38,7 @@
       <div class="row">
       <div class="mb-3 col-md-5">
         <label for="image" class="form-label">Upload New Image</label>
-        <input name="listing[image]" type="file" class="form-control" />
+        <input name="listing[image]" id="image" type="file" class="form-control" />
       </div>
       <div class="mb-3 col-md-7">
                 <label for="category" class="form-label"> Add Category : </label>
@@ -58,7 +60,7 @@
       </div>
 
       <div class="mb-3 ">
-          <label for="price" class="form-label">Price</label>
+          <label for="price" class="form-label" id="price">Price</label>
           <input
           id="price"
             name="listing[price]"

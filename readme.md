@@ -100,13 +100,14 @@ B.Tech CSE – United Institute of Technology
    ```
 
 3. **Set up environment variables in .env**
-   ```CLOUDINARY_CLOUD_NAME=your_cloud_name```
-   ```CLOUDINARY_KEY=your_api_key```
-   ```CLOUDINARY_SECRET=your_api_secret```
-   ```ATLASDB_URL=```
-   ```SECRET=```
-   ```RAZORPAY_KEY_ID=your_razorpay_key```
-   ```RAZORPAY_KEY_SECRET=your_razorpay_secret```
+
+   - CLOUDINARY_CLOUD_NAME=your_cloud_name
+   - CLOUDINARY_KEY=your_api_key
+   - CLOUDINARY_SECRET=your_api_secret
+   - ATLASDB_URL=
+   - SECRET=
+   - RAZORPAY_KEY_ID=your_razorpay_key
+   - RAZORPAY_KEY_SECRET=your_razorpay_secret
 
 4. **Run the server**
    ```bash

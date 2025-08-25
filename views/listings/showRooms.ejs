@@ -1,8 +1,8 @@
 <% layout('layouts/boilerplate') -%>
 <div class="d-flex flex-column">
   <% for(let room of availableRooms) { %>
-  <div class="card mt-3">
-    <div class="card-header"><%= room.highlight %></div>
+  <div class="card mt-3" style="border: 0.05rem solid #bbb;">
+    <div class="card-header" style="border-bottom: 0.05rem solid #bbb;"><%= room.highlight %></div>
     <div class="card-body">
       <div class="d-flex gap-3">
         <% for(let feature of room.amenities) { %> <% const iconClassMap = {
@@ -27,7 +27,7 @@
       <p class="card-text">&#8377;<%= room.price %> /Night</p>
     </div>
     <form
-      action="#"
+    action="#"
       method="post"
       class="m-2 razorpay-form"
       data-listing-id="<%= id %>"
@@ -59,7 +59,7 @@
         value="<%= bookingData.children %>"
       />
       <input type="hidden" name="price" value="<%= room.price %>" />
-      <button class="btn btn-info" id="rzp-button">Book Now</button>
+      <button class="btn btn-danger" id="rzp-button">Book Now</button>
     </form>
   </div>
   <% } %>
@@ -70,7 +70,6 @@
   document.querySelectorAll(".razorpay-form").forEach((form) => {
     form.addEventListener("submit", async function (e) {
       e.preventDefault();
-
       const formData = new FormData(form);
       const bookingData = {
         checkin: formData.get("booking[checkin]"),
@@ -80,13 +79,14 @@
         children: formData.get("booking[children]"),
         price: formData.get("price"),
       };
+      
+      console.log("Booking data being sent:", bookingData);
 
       const res = await fetch("/payment/order", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ bookingData }),
       });
-
       const orderData = await res.json();
 
       const options = {
@@ -106,9 +106,8 @@
             razorpay_signature: response.razorpay_signature,
             booking: bookingData, // Add booking info for DB
           };
-
           const bookingRes = await fetch(
-            `/listing/${listingId}/book/${roomId}`,
+            `/listings/${listingId}/book/${roomId}`,
             {
               method: "POST",
               headers: {
@@ -117,7 +116,6 @@
               body: JSON.stringify(data),
             }
           );
-
           const resultHTML = await bookingRes.text();
           document.open();
           document.write(resultHTML);
@@ -126,6 +124,7 @@
       };
 
       const rzp = new Razorpay(options);
+
       rzp.open();
     });
   });

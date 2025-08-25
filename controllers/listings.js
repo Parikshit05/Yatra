@@ -5,8 +5,6 @@ const Booking = require("../models/booking.js");
 const cloudinary = require("cloudinary").v2;
 
 module.exports.index = async (req, res) => {
-  // const allListings = await Listing.find({});
-  // res.render("./listings/index.ejs", { allListings });
   let allListings = await Listing.find();
 
   try {
@@ -56,21 +54,15 @@ module.exports.createListing = async (req, res, next) => {
     newListing.image = { url, filename };
   }
 
-  // const fullLocation = `${newListing.location}, ${newListing.country}`;
-  // const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`;
   let fullLocation = req.body.listing.location.trim();
-if (!fullLocation.toLowerCase().includes(req.body.listing.country.toLowerCase())) {
-  fullLocation += `, ${req.body.listing.country}`;
-}
-
+  if (
+    !fullLocation.toLowerCase().includes(req.body.listing.country.toLowerCase())
+  ) {
+    fullLocation += `, ${req.body.listing.country}`;
+  }
 
   // Try to get coordinates from geocoding API
   try {
-    // const geoRes = await fetch(
-    //   `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(
-    //     fullLocation
-    //   )}`
-    // );
     const geoRes = await fetch(
       `https://nominatim.openstreetmap.org/search?format=json&limit=1&q=${encodeURIComponent(
         fullLocation
@@ -80,14 +72,6 @@ if (!fullLocation.toLowerCase().includes(req.body.listing.country.toLowerCase())
       }
     );
     const geoData = await geoRes.json();
-
-    // let geoData = [];
-    // if (geoRes.ok) {
-    //   const contentType = geoRes.headers.get("content-type");
-    //   if (contentType && contentType.includes("application/json")) {
-    //     geoData = await geoRes.json();
-    //   }
-    // }
 
     if (geoData && geoData.length > 0) {
       const latitude = parseFloat(geoData[0]?.lat) || 0;
@@ -103,13 +87,12 @@ if (!fullLocation.toLowerCase().includes(req.body.listing.country.toLowerCase())
     }
   } catch (geocodingError) {
     console.error("Geocoding API error:", geocodingError);
-    // Set coordinates to null when geocoding fails
     newListing.coordinates = null;
   }
 
   await newListing.save();
   req.flash("success", "New Listing Created!");
-  res.redirect("/admin");
+  res.redirect(`/admin/${newListing._id}/add-room`);
 };
 
 module.exports.renderEditForm = async (req, res) => {
@@ -142,10 +125,11 @@ module.exports.updateListing = async (req, res) => {
   // const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`;
   // const fullLocation = `${req.body.listing.location}, ${req.body.listing.country}`;
   let fullLocation = req.body.listing.location.trim();
-if (!fullLocation.toLowerCase().includes(req.body.listing.country.toLowerCase())) {
-  fullLocation += `, ${req.body.listing.country}`;
-}
-
+  if (
+    !fullLocation.toLowerCase().includes(req.body.listing.country.toLowerCase())
+  ) {
+    fullLocation += `, ${req.body.listing.country}`;
+  }
 
   // Try to get coordinates from geocoding API
   try {
@@ -230,12 +214,17 @@ module.exports.bookListingForm = async (req, res) => {
   let data = await Listing.findById(id).populate("owner");
   if (!data) {
     req.flash("error", "Listing not found!");
-    return res.status(404).redirect("/listing");
+    return res.status(404).redirect("/listings");
   }
   res.status(200).render("listings/book.ejs", { data });
 };
 
 module.exports.availableRooms = async (req, res) => {
+  const { checkin, checkout, totalGuests } = req.body.booking || {};
+
+  if (!checkin || !checkout || !totalGuests) {
+    return res.status(400).send("Missing booking data.");
+  }
   let { id } = req.params;
   let bookingData = req.body.booking;
   let listing = await Listing.findById(id).populate({
@@ -265,7 +254,7 @@ module.exports.availableRooms = async (req, res) => {
       "error",
       "This listing rooms is not available for the selected dates!"
     );
-    return res.status(200).redirect(`/listing/${id}/book`);
+    return res.status(200).redirect(`/listings/${id}/book`);
   }
 
   // let newBooking = {
@@ -313,35 +302,94 @@ module.exports.showBookings = async (req, res) => {
   });
 };
 
+// module.exports.bookRoom = async (req, res) => {
+//   const bookingData = req.body.booking;
+//   const payment = {
+//     payment_id: req.body.razorpay_payment_id,
+//     order_id: req.body.razorpay_order_id,
+//     signature: req.body.razorpay_signature,
+//   };
+
+//   let { id, roomId } = req.params;
+//   let listing = await Listing.findById(id).populate("rooms");
+//   let room = await Room.findById(roomId).populate("bookings");
+//   let newBooking = new Booking({
+//     checkin: new Date(bookingData.checkin),
+//     checkout: new Date(bookingData.checkout),
+//     guests: {
+//       total: bookingData.totalGuests,
+//       adults: bookingData.adults,
+//       children: bookingData.children || 0,
+//     },
+//     customer: res.locals.currUser._id,
+//   });
+
+//   let user = await User.findById(res.locals.currUser._id);
+//   user.bookedListing.push(listing._id);
+//   user.save();
+
+//   await newBooking.save();
+//   await room.bookings.push(newBooking._id);
+//   await room.save();
+
+//   res.status(200).render("payment/success.ejs", { payment });
+// };
+
 module.exports.bookRoom = async (req, res) => {
-  const bookingData = req.body.booking;
-  const payment = {
-    payment_id: req.body.razorpay_payment_id,
-    order_id: req.body.razorpay_order_id,
-    signature: req.body.razorpay_signature,
-  };
+  try {
+    const bookingData = req.body.booking;
+    if (!bookingData) {
+      return res.status(400).send("Booking data is missing.");
+    }
 
-  let { id, roomId } = req.params;
-  let listing = await Listing.findById(id).populate("rooms");
-  let room = await Room.findById(roomId).populate("bookings");
-  let newBooking = new Booking({
-    checkin: new Date(bookingData.checkin),
-    checkout: new Date(bookingData.checkout),
-    guests: {
-      total: bookingData.totalGuests,
-      adults: bookingData.adults,
-      children: bookingData.children || 0,
-    },
-    customer: res.locals.currUser._id,
-  });
+    const payment = {
+      payment_id: req.body.razorpay_payment_id,
+      order_id: req.body.razorpay_order_id,
+      signature: req.body.razorpay_signature,
+    };
 
-  let user = await User.findById(res.locals.currUser._id);
-  user.bookedListing.push(listing._id);
-  user.save();
+    const { id, roomId } = req.params;
 
-  await newBooking.save();
-  await room.bookings.push(newBooking._id);
-  await room.save();
+    const listing = await Listing.findById(id).populate("rooms");
+    if (!listing) {
+      return res.status(404).send("Listing not found.");
+    }
 
-  res.status(200).render("payment/success.ejs", { payment });
+    const room = await Room.findById(roomId).populate("bookings");
+    if (!room) {
+      return res.status(404).send("Room not found.");
+    }
+
+    // Create new booking
+    const newBooking = new Booking({
+      checkin: new Date(bookingData.checkin),
+      checkout: new Date(bookingData.checkout),
+      guests: {
+        total: bookingData.totalGuests,
+        adults: bookingData.adults,
+        children: bookingData.children || 0,
+      },
+      customer: res.locals.currUser._id,
+      payment, // ✅ save payment details in booking for future reference
+      listing: listing._id,
+      room: room._id,
+    });
+
+    // Save booking
+    await newBooking.save();
+
+    // Link booking to room
+    room.bookings.push(newBooking._id);
+    await room.save();
+
+    // Link listing to user
+    const user = await User.findById(res.locals.currUser._id);
+    user.bookedListing.push(listing._id);
+    await user.save();
+
+    res.status(200).render("payment/success.ejs", { payment });
+  } catch (err) {
+    console.error("Booking error:", err);
+    res.status(500).send("Something went wrong while booking.");
+  }
 };

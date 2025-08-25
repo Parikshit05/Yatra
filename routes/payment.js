@@ -1,5 +1,5 @@
-const express = require('express');
-const Razorpay = require('razorpay');
+const express = require("express");
+const Razorpay = require("razorpay");
 const router = express.Router();
 
 const razorpayInstance = new Razorpay({
@@ -7,27 +7,31 @@ const razorpayInstance = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-router.post('/order', async (req, res) => {
-    const { bookingData } = req.body;
+router.post("/order", async (req, res) => {
+  const { bookingData } = req.body;
 
-    const amount = bookingData.price;
+  if (!bookingData || !bookingData.price) {
+    return res.status(400).json({ error: "Invalid booking data" });
+  }
+
+  const amount = parseInt(bookingData.price);
 
   const options = {
-    amount: amount * 100, // amount in smallest currency unit
-    currency: 'INR',
-    receipt: 'receipt_order_74394',
+    amount: amount * 100,
+    currency: "INR",
+    receipt: "receipt_order_74394",
   };
 
   try {
     const order = await razorpayInstance.orders.create(options);
     res.json(order);
   } catch (err) {
-    res.status(500).send('Something went wrong');
+    res.status(500).json({ error: "Failed to create Razorpay order" });
   }
 });
 
-router.post('/success', (req, res) => {
-  res.render('payment/success.ejs', { payment: req.body });
+router.post("/success", (req, res) => {
+  res.render("payment/success.ejs", { payment: req.body });
 });
 
 module.exports = router;

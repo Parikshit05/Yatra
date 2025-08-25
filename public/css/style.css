@@ -66,6 +66,7 @@ body {
 
 .card-img-top {
   border-radius: 1rem !important;
+  height: 20rem !important;
   width: 100% !important;
   object-fit: cover !important;
 }
@@ -142,23 +143,20 @@ body {
   font-size: 1rem !important;
 }
 
-
-.review-btns{
+.review-btns {
   display: flex;
-  justify-content:space-between;
+  justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
 }
 
-
-
 /* Simple toggle styling */
 .switch {
-  position: relative;         /* instead of fixed for flexibility */
+  position: relative; /* instead of fixed for flexibility */
   display: inline-block;
   top: 0.7rem;
-  width: 2rem;              /* base width */
-  height: 1rem;             /* base height */
+  width: 2rem; /* base width */
+  height: 1rem; /* base height */
 }
 
 .switch input {
@@ -168,12 +166,12 @@ body {
 .slider {
   position: absolute;
   cursor: pointer;
-  top: 0; 
-  left: 0; 
-  right: 0; 
+  top: 0;
+  left: 0;
+  right: 0;
   bottom: 0;
   background-color: #ccc;
-  transition: .4s;
+  transition: 0.4s;
   border-radius: 24px;
 }
 
@@ -181,24 +179,24 @@ body {
 .slider:before {
   position: absolute;
   content: "";
-  height: 1rem;             /* match slider height */
+  height: 1rem; /* match slider height */
   width: 1rem;
   left: 0;
   bottom: 0;
-  background-color: rgb(78, 73, 73);    /* knob color when OFF */
-  transition: .4s;
+  background-color: rgb(78, 73, 73); /* knob color when OFF */
+  transition: 0.4s;
   border-radius: 50%;
 }
 
 /* Background when ON */
 input:checked + .slider {
-  background-color: #2196F3;
+  background-color: #2196f3;
 }
 
 /* Circle knob when ON */
 input:checked + .slider:before {
   transform: translateX(1.2rem);
-  background-color: rgb(255, 255, 255);   /* knob color when ON */
+  background-color: rgb(255, 255, 255); /* knob color when ON */
 }
 
 /* 🔹 Responsive scaling */
@@ -240,36 +238,34 @@ body.dark-mode {
 }
 
 body.dark-mode .tax-toggle {
-    border: 1px solid white;
+  border: 1px solid white;
 }
 
 body.dark-mode .card {
-   background-color: #121212 !important;
-   color: #fff !important;    
+  background-color: #121212 !important;
+  color: #fff !important;
 }
 
-body.dark-mode .navbar{
-     background-color: #121212 !important;
-     color: #fff !important;
+body.dark-mode .navbar {
+  background-color: #121212 !important;
+  color: #fff !important;
 }
 
-body.dark-mode .search-inp
-{
-    background-color: #121618 !important;
-    color: #fff !important;
+body.dark-mode .search-inp {
+  background-color: #121618 !important;
+  color: #fff !important;
 }
 
-body.dark-mode ::placeholder
-{
+body.dark-mode ::placeholder {
   color: white !important;
 }
 
-body.dark-mode #comment{
+body.dark-mode #comment {
   background-color: #121618 !important;
-    color: #fff !important;
+  color: #fff !important;
 }
 
-body.dark-mode #title{
+body.dark-mode #title {
   background-color: #121618 !important;
   color: #fff !important;
 }
@@ -281,7 +277,7 @@ body.dark-mode #image {
   background-color: #121618 !important;
   color: #fff !important;
 }
-body.dark-mode #location{
+body.dark-mode #location {
   background-color: #121618 !important;
   color: #fff !important;
 }
@@ -297,15 +293,33 @@ body.dark-mode #category {
   background-color: #121618 !important;
   color: #fff !important;
 }
+body.dark-mode #highlight {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode #roomType {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode #maxcapacity {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
+body.dark-mode input {
+  background-color: #121618 !important;
+  color: #fff !important;
+}
 
 /* Light mode (default) */
-#mainFooter, f-info {
+#mainFooter,
+f-info {
   background-color: #f8f9fa;
   color: #212529;
 }
 
 /* Dark mode */
-body.dark-mode #mainFooter, f-info {
+body.dark-mode #mainFooter,
+f-info {
   border-top: 1px solid #bbb;
   background-color: #121212 !important;
   color: #f5f5f5 !important;
@@ -324,7 +338,7 @@ body.dark-mode #mainFooter a {
 
 body.dark-mode .f-info {
   /*yeeeeeeeeeeeeeeee*/
-  background-color: #121212; 
+  background-color: #121212;
   color: #fff;
 }
 
@@ -338,7 +352,6 @@ body.dark-mode .f-info {
 body.dark-mode .f-info a {
   color: #bbb; /* lighter links in dark mode */
 }
-
 
 /* Default (light mode) */
 .custom-mobile-menu {
@@ -361,20 +374,16 @@ body.dark-mode .custom-mobile-menu a {
   color: #ddd !important; /* lighter text in dark mode */
 }
 
-body.dark-mode .navbar-toggler{
+body.dark-mode .navbar-toggler {
   color: #ffffff !important;
 }
 
-
-
-
-
-
 /* Base toggle style */
+/* 
 .form-check-input {
   width: 3rem;
   height: 1.5rem;
-  background-color: #ccc;  /* track color when OFF */
+  background-color: #ccc; 
   border-radius: 2rem;
   position: relative;
   cursor: pointer;
@@ -383,7 +392,6 @@ body.dark-mode .navbar-toggler{
   transition: background-color 0.3s ease;
 }
 
-/* The knob (circle) */
 .form-check-input::before {
   content: "";
   position: absolute;
@@ -391,20 +399,20 @@ body.dark-mode .navbar-toggler{
   left: 0px;
   width: 0.8rem;
   height: 0.8rem;
-  background-color: rgb(73, 69, 69);   /* knob color when OFF */
+  background-color: rgb(73, 69, 69);   
   border-radius: 50%;
   transition: transform 0.3s ease, background-color 0.3s ease;
 }
 
-/* When ON */
+
 .form-check-input:checked {
-  background-color: #0d6efd; /* track color when ON (Bootstrap blue) */
+  background-color: #0d6efd; 
 }
 
 .form-check-input:checked::before {
-  transform: translateX(1.1rem); /* move knob to right */
-  background-color: rgb(255, 255, 255);      /* knob color when ON */
-}
+  transform: translateX(1.1rem); 
+  background-color: rgb(255, 255, 255);      
+} */
 
 /* Default (light mode) */
 .review-author {
@@ -416,11 +424,9 @@ body.dark-mode .navbar-toggler{
   color: white; /* or #ddd for softer */
 }
 
-.dark-option{
+.dark-option {
   display: flex;
-  
 }
-
 
 .booking-card {
   border: none !important;
@@ -437,19 +443,18 @@ body.dark-mode .navbar-toggler{
   }
 }
 
-
-
 /* General */
 
-.form-control:focus, .form-select:focus  {
-  box-shadow:0 0 300px #0dcaf0 !important;
+.form-control:focus,
+.form-select:focus {
+  box-shadow: 0 0 300px #0dcaf0 !important;
 }
 
 .form-check-input:focus {
-  box-shadow:0 0 10px #0dcaf0 !important;
+  box-shadow: 0 0 10px #0dcaf0 !important;
 }
 
 .form-check-input:checked {
   background-color: #0dcaf0 !important;
-border-color: #0dcaf0 !important;
+  border-color: #0dcaf0 !important;
 }

@@ -1,7 +1,7 @@
 <% layout('layouts/boilerplate') -%>
 <body>
   <div class="d-flex flex-column flex-md-row justify-content-around mt-5 mb-5">
-    <div class="card booking-card">
+    <div class="card booking-card" style="margin-right: 4rem;">
       <img
         src="<%= data.image.url %>"
         class="card-img-top show-img"
@@ -18,7 +18,7 @@
     <hr class="d-md-none">
     <div class="w-md-50 mb-3">
       <h3 class="mb-3">Booking Form</h3>
-      <form action="/listings/<%= data._id %>/rooms" method="post" class="grid">
+      <form action="/listings/<%= data._id %>/rooms" method="POST" class="grid">
         <div class="row">
           <div class="col-md-6">
             <label for="checkin-date">Chek In :</label>
@@ -27,6 +27,7 @@
               class="form-control"
               name="booking[checkin]"
               id="checkin-date"
+              required
             />
           </div>
           <div class="col-md-6">
@@ -36,6 +37,7 @@
               class="form-control"
               name="booking[checkout]"
               id="checkout-date"
+              required
             />
           </div>
         </div>
@@ -47,6 +49,7 @@
             name="booking[totalGuests]"
             id="guests"
             min="1"
+            required
           />
         </div>
         <div class="row mt-3">
@@ -57,6 +60,7 @@
               class="form-control"
               name="booking[adults]"
               id="adults"
+              required
             />
           </div>
           <div class="col-md-6">
@@ -68,7 +72,7 @@
               id="children"
             />
           </div>
-          <button class="btn btn-info mt-3 col-10 offset-1" type="submit">Book now</button>
+          <button class="btn btn-danger mt-3 col-10 offset-1" type="submit">Book now</button>
         </div>
       </form>
     </div>

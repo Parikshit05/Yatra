@@ -8,11 +8,11 @@ const userSchema = new Schema({
     required: true,
   },
   bookedListing: [
-        {
-            type: mongoose.Schema.Types.ObjectId,
-            ref: "Listing",
-        }
-    ],
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Listing",
+    },
+  ],
 });
 
 userSchema.plugin(passportLocalMongoose);

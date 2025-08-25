@@ -1,20 +1,25 @@
 document.addEventListener("DOMContentLoaded", () => {
   const mapContainer = document.getElementById("map");
 
-  if (mapContainer && lat != null && lon != null && !isNaN(lat) && !isNaN(lon)) {
+  if (
+    mapContainer &&
+    lat != null &&
+    lon != null &&
+    !isNaN(lat) &&
+    !isNaN(lon)
+  ) {
     try {
       const map = L.map("map").setView([lat, lon], 14);
 
       L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
         maxZoom: 19,
-        attribution: '&copy; OpenStreetMap contributors'
+        attribution: "&copy; OpenStreetMap contributors",
       }).addTo(map);
 
       L.marker([lat, lon])
         .addTo(map)
         .bindPopup("📍 Location of this listing")
         .openPopup();
-
     } catch (error) {
       showSimpleMessage(mapContainer);
     }
@@ -24,8 +29,10 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function showSimpleMessage(mapContainer) {
-  const locationElement = document.querySelector('.listing-location');
-  const locationText = locationElement ? locationElement.textContent : 'Location information';
+  const locationElement = document.querySelector(".listing-location");
+  const locationText = locationElement
+    ? locationElement.textContent
+    : "Location information";
 
   mapContainer.innerHTML = `
     <div class="map-simple-message">
@@ -45,7 +52,6 @@ function showSimpleMessage(mapContainer) {
     </div>
   `;
 }
-
 
 window.addEventListener("resize", () => {
   map.invalidateSize();

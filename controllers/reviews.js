@@ -33,7 +33,6 @@ module.exports.renderEditForm = async (req, res) => {
   res.render("./listings/editReview.ejs", { listing, review });
 };
 
-
 module.exports.updateReview = async (req, res) => {
   let { id, reviewId } = req.params;
   const listing = await Listing.findById(id);
